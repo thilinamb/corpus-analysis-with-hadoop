@@ -1,5 +1,6 @@
 package cs455.hadoop.job;
 
+import cs455.hadoop.combine.BookMetricCombiner;
 import cs455.hadoop.map.BookMetricMapper;
 import cs455.hadoop.reduce.BookMetricReducer;
 import cs455.hadoop.type.BookMetricInfo;
@@ -39,7 +40,7 @@ public class BookMetricCalculator {
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
             job.setMapperClass(BookMetricMapper.class);
             job.setReducerClass(BookMetricReducer.class);
-            //job.setCombinerClass(BookMetricReducer.class);
+            job.setCombinerClass(BookMetricCombiner.class);
             // set output for mappers
             job.setMapOutputKeyClass(Text.class);
             job.setMapOutputValueClass(BookMetricInfo.class);
