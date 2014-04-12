@@ -39,9 +39,14 @@ public class BookMetricCalculator {
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
             job.setMapperClass(BookMetricMapper.class);
             job.setReducerClass(BookMetricReducer.class);
-            job.setCombinerClass(BookMetricReducer.class);
+            //job.setCombinerClass(BookMetricReducer.class);
+            // set output for mappers
+            job.setMapOutputKeyClass(Text.class);
+            job.setMapOutputValueClass(BookMetricInfo.class);
+            // set output for reducers
             job.setOutputKeyClass(Text.class);
-            job.setOutputValueClass(BookMetricInfo.class);
+            job.setOutputValueClass(Text.class);
+
             System.exit(job.waitForCompletion(true) ? 0 : 1);
         } catch (IOException e) {
             e.printStackTrace();
