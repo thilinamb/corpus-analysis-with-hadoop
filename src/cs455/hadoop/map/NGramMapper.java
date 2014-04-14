@@ -42,7 +42,7 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         for (int j = 0; j <= (tokenCount - nGramSize); j++) {
             StringBuilder stringBuilder = new StringBuilder();
-            for (int k = 0; k < nGramSize; j++) {
+            for (int k = 0; k < nGramSize; k++) {
                 stringBuilder.append(tokens[j + k]);
                 // use a space to separate the words in the N-Gram
                 stringBuilder.append(" ");
