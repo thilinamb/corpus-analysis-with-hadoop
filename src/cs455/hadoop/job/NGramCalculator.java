@@ -23,6 +23,9 @@ public class NGramCalculator {
     public static void main(String[] args) {
         try {
             Configuration conf = new Configuration();
+            // set the N-gram size
+            conf.set(Constants.NGRAM_SIZE, args[2]);
+
             Job job = Job.getInstance(conf);
             // make sure that each file is considered as a separate split.
             FileSystem fs = FileSystem.get(conf);
@@ -33,8 +36,6 @@ public class NGramCalculator {
                 }
             }
 
-            // set the N-gram size
-            conf.set(Constants.NGRAM_SIZE, args[2]);
 
             job.setJarByClass(NGramCalculator.class);
             job.setJobName("N-Gram calculation.");
