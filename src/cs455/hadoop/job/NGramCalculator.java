@@ -36,7 +36,7 @@ public class NGramCalculator {
             // set the N-gram size
             conf.set(Constants.NGRAM_SIZE, args[2]);
 
-            job.setJarByClass(BookMetricCalculator.class);
+            job.setJarByClass(NGramCalculator.class);
             job.setJobName("N-Gram calculation.");
             // set the output path
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
