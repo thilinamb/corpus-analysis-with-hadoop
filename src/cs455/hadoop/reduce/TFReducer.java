@@ -1,6 +1,7 @@
 package cs455.hadoop.reduce;
 
 import cs455.hadoop.type.TFNGramInfo;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -20,7 +21,8 @@ public class TFReducer extends Reducer<Text, TFNGramInfo, Text, Text> {
         // we need a cache of nGramInfo values because we have to iterate twice.
         List<TFNGramInfo> cache = new ArrayList<TFNGramInfo>();
         for (TFNGramInfo nGramInfo : values) {
-            TFNGramInfo cachedCopy = new TFNGramInfo(nGramInfo.getnGramString(), nGramInfo.getnGramCount());
+            TFNGramInfo cachedCopy = new TFNGramInfo(
+                    new Text(nGramInfo.getnGramString().toString()), new IntWritable(nGramInfo.getnGramCount().get()));
             cache.add(cachedCopy);
             if (maxFrequency < nGramInfo.getnGramCount().get()) {
                 maxFrequency = nGramInfo.getnGramCount().get();
