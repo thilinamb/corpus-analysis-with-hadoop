@@ -5,6 +5,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Thilina
@@ -15,13 +17,18 @@ public class TFReducer extends Reducer<Text, TFNGramInfo, Text, Text> {
     protected void reduce(Text key, Iterable<TFNGramInfo> values, Context context) throws IOException, InterruptedException {
         // first find the maximum frequency of any nGram.
         int maxFrequency = 0;
+        // we need a cache of nGramInfo values because we have to iterate twice.
+        List<TFNGramInfo> cache = new ArrayList<TFNGramInfo>();
         for (TFNGramInfo nGramInfo : values) {
+            TFNGramInfo cachedCopy = new TFNGramInfo(nGramInfo.getnGramString(), nGramInfo.getnGramCount());
+            cache.add(cachedCopy);
             if (maxFrequency < nGramInfo.getnGramCount().get()) {
                 maxFrequency = nGramInfo.getnGramCount().get();
             }
         }
-        // now calculate the TF and store as the final output.
-        for (TFNGramInfo nGramInfo : values) {
+
+        // now calculate the TF and store as the final output. Use the cache in this iteration.
+        for (TFNGramInfo nGramInfo : cache) {
             int nGramCount = nGramInfo.getnGramCount().get();
             double tfValue = 0.5 + ((0.5 * nGramCount) / maxFrequency);
             String newKey = key + "#" + nGramInfo.getnGramString();
