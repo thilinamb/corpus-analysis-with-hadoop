@@ -6,4 +6,5 @@ package cs455.hadoop.util;
  */
 public class Constants {
     public static final String NGRAM_SIZE = "ngram-size";
+    public static final String CORPUS_SIZE = "corpus-size";
 }
