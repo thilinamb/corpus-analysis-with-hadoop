@@ -15,7 +15,7 @@ import java.util.List;
  * Author: Thilina
  * Date: 4/15/14
  */
-public class TFIDFReducer extends Reducer<Text, TFIDFNGramInfo, Text, DoubleWritable> {
+public class TFIDFReducer extends Reducer<Text, TFIDFNGramInfo, Text, Text> {
     @Override
     protected void reduce(Text key, Iterable<TFIDFNGramInfo> values, Context context) throws IOException, InterruptedException {
         // get the corpus size from the configuration
@@ -34,10 +34,12 @@ public class TFIDFReducer extends Reducer<Text, TFIDFNGramInfo, Text, DoubleWrit
 
         // now calculate the IDF value along with TF-IDF value.
         for (TFIDFNGramInfo TFIDFNGramInfo : cache) {
-            double idfVal = Math.log(corpusSize / docFreq);
+            double idfVal = Math.log10((double)corpusSize / (double)docFreq);
             double tfIdfVal = idfVal * TFIDFNGramInfo.getTfValue().get();
             String newKeyString = TFIDFNGramInfo.getDocumentId().toString() + "#" + key.toString();
-            context.write(new Text(newKeyString), new DoubleWritable(tfIdfVal));
+            // value String is of the following form - tf#idf#tf-idf
+            String valueString = TFIDFNGramInfo.getTfValue().get() + "#" + idfVal + "#" + tfIdfVal;
+            context.write(new Text(newKeyString), new Text(valueString));
         }
     }
 }
