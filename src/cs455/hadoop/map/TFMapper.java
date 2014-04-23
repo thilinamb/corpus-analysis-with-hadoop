@@ -23,7 +23,7 @@ public class TFMapper extends Mapper<LongWritable, Text, Text, TFNGramInfo> {
         String[] keyValSplit = lineString.split("\t");
 
         // Split the key. It's of the form 068-Year458BC.txt#word1 word2
-        String[] keyStrSplits = keyValSplit[0].toString().split("#");
+        String[] keyStrSplits = keyValSplit[0].split("#");
 
         String fileName = keyStrSplits[0];
         String nGramString = keyStrSplits[1];
