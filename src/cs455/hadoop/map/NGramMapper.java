@@ -1,6 +1,7 @@
 package cs455.hadoop.map;
 
 import cs455.hadoop.util.Constants;
+import cs455.hadoop.util.Util;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -40,6 +41,9 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         String param = conf.get(Constants.NGRAM_SIZE);
         int nGramSize = Integer.parseInt(param);
 
+        // Check whether the N-Grams are calculated per decade or per-book
+        boolean perDecade = Constants.NGRAM_PER_DECADE.equals(conf.get(Constants.NGRAM_GRANUALITY))? true : false;
+
         for (int j = 0; j <= (tokenCount - nGramSize); j++) {
             StringBuilder stringBuilder = new StringBuilder();
             for (int k = 0; k < nGramSize; k++) {
@@ -48,9 +52,16 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
                 stringBuilder.append(" ");
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            // use '#' sign to separate the file name and the N-gram
-            // The key will be of the form 068-Year458BC.txt#word1 word2..
-            String nGramKey = fileName + "#" + stringBuilder.toString();
+            // use '#' sign to separate the file name/decade and the N-gram
+            // For example, the key will be of the form 068-Year458BC.txt#word1 word2..
+            String nGramKey;
+            // if the key is the
+            if (perDecade) {
+                nGramKey = Integer.toString(Util.getPublishedYearFromFileName(fileName));
+            } else {
+                nGramKey = fileName;
+            }
+            nGramKey = nGramKey + "#" + stringBuilder.toString();
             context.write(new Text(nGramKey), new IntWritable(1));
         }
     }

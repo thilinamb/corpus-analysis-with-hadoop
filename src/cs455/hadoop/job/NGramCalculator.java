@@ -25,6 +25,8 @@ public class NGramCalculator {
             Configuration conf = new Configuration();
             // set the N-gram size
             conf.set(Constants.NGRAM_SIZE, args[2]);
+            // set whether to calculate N-grams per decade or per book
+            conf.set(Constants.NGRAM_GRANUALITY, args[3]);
 
             Job job = Job.getInstance(conf);
             // make sure that each file is considered as a separate split.
@@ -35,7 +37,6 @@ public class NGramCalculator {
                     FileInputFormat.addInputPath(job, status.getPath());
                 }
             }
-
 
             job.setJarByClass(NGramCalculator.class);
             job.setJobName("N-Gram calculation.");

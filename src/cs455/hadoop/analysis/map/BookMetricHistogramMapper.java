@@ -1,6 +1,7 @@
 package cs455.hadoop.analysis.map;
 
 import cs455.hadoop.util.Constants;
+import cs455.hadoop.util.Util;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -24,16 +25,10 @@ public class BookMetricHistogramMapper extends Mapper<LongWritable, Text, IntWri
         String[] keyValueSplits = line.split("\t");
         String fileName = keyValueSplits[0];
         String metricString = keyValueSplits[1];
+
         // now extract the published year.
-        String publishedYearStr = fileName.split("[0-9]*-Year")[1].split(".txt")[0];
-        int publishedYear;
-        if(publishedYearStr.toUpperCase().contains("BC")){
-            publishedYearStr = publishedYearStr.replaceFirst("BC","");
-            // For books published in BC, multiply the number by -1
-            publishedYear = Integer.parseInt(publishedYearStr) * -1;
-        } else {
-            publishedYear = Integer.parseInt(publishedYearStr);
-        }
+        int publishedYear = Util.getPublishedYearFromFileName(fileName);
+
         // get the Flesh Reading Ease score from the value String.
         // it is of the form flesch_score//reading_level
         int metricName = Integer.parseInt(context.getConfiguration().get(Constants.METRIC_NAME));
@@ -49,10 +44,11 @@ public class BookMetricHistogramMapper extends Mapper<LongWritable, Text, IntWri
         String period = context.getConfiguration().get(Constants.PERIOD).toLowerCase();
         if (period.equals(Constants.PER_DECADE)) {
             // calculate the decade the published year belongs into.
-            publishedYear = publishedYear - (publishedYear % 10);
+            publishedYear = Util.getDecadeFromYear(publishedYear);
         }
 
         // write the published year(key) and the Flesch score(value) to the reducer
         context.write(new IntWritable(publishedYear), new DoubleWritable(fleshReadingScore));
     }
+
 }

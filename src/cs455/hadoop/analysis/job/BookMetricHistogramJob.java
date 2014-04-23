@@ -30,7 +30,7 @@ public class BookMetricHistogramJob {
             job.setJarByClass(BookMetricHistogramJob.class);
             job.setJobName("Plotting Histograms for Book Metrics for " + args[2] + ":" + args[3]);
 
-            // set the output path
+            // set the input/output path
             FileInputFormat.addInputPath(job, new Path(args[0]));
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
             job.setMapperClass(BookMetricHistogramMapper.class);

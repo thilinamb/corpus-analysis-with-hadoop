@@ -5,7 +5,14 @@ package cs455.hadoop.util;
  * Date: 4/14/14
  */
 public class Constants {
+    public static final String DELIMITER = "#";
+
     public static final String NGRAM_SIZE = "ngram-size";
+
+    public static final String NGRAM_GRANUALITY = "ngram-granuality";
+    public static final String NGRAM_PER_BOOK = "book";
+    public static final String NGRAM_PER_DECADE = "decade";
+
     public static final String CORPUS_SIZE = "corpus-size";
     public static final String METRIC_NAME = "metric-name";
     public static final String PERIOD = "period";
