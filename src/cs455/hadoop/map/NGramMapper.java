@@ -57,7 +57,7 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
             String nGramKey;
             // if the key is the
             if (perDecade) {
-                nGramKey = Integer.toString(Util.getPublishedYearFromFileName(fileName));
+                nGramKey = Integer.toString(Util.getDecadeFromYear(Util.getPublishedYearFromFileName(fileName)));
             } else {
                 nGramKey = fileName;
             }
