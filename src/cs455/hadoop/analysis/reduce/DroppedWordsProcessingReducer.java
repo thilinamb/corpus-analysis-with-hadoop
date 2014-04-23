@@ -1,12 +1,14 @@
 package cs455.hadoop.analysis.reduce;
 
 import cs455.hadoop.analysis.type.NGramAnalysisInfo;
-import cs455.hadoop.analysis.type.WordDecadeKey;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This reducer extracts out the words that were not available in every decade.
@@ -20,15 +22,27 @@ import java.io.IOException;
  * Author: Thilina
  * Date: 4/22/14
  */
-public class DiscontinuedWordsProcessingReducer extends Reducer<WordDecadeKey, NGramAnalysisInfo, Text, IntWritable>{
+public class DroppedWordsProcessingReducer extends Reducer<Text, NGramAnalysisInfo, Text, IntWritable> {
 
     @Override
-    protected void reduce(WordDecadeKey key, Iterable<NGramAnalysisInfo> values, Context context) throws IOException, InterruptedException {
-        for(NGramAnalysisInfo info : values){
+    protected void reduce(Text key, Iterable<NGramAnalysisInfo> values, Context context) throws IOException, InterruptedException {
+
+        List<NGramAnalysisInfo> nGramInfoList = new ArrayList<NGramAnalysisInfo>();
+
+        for (NGramAnalysisInfo info : values) {
             // output only the words which were not available during every decades.
-            if(info.getIdfValue() > 0){
-                context.write(new Text(key.getWord()), new IntWritable(info.getPeriod()));
+            if (info.getIdfValue() > 0) {
+                nGramInfoList.add(new NGramAnalysisInfo(info.getPeriod(),
+                        info.getTfValue(),
+                        info.getIdfValue(),
+                        info.getTfIdfValue()));
             }
+        }
+        // sort based on the period
+        Collections.sort(nGramInfoList);
+        // write sorted output
+        for(NGramAnalysisInfo info : nGramInfoList){
+            context.write(key, new IntWritable(info.getPeriod()));
         }
     }
 }

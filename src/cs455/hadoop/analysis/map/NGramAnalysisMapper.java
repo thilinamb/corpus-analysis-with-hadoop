@@ -1,7 +1,6 @@
 package cs455.hadoop.analysis.map;
 
 import cs455.hadoop.analysis.type.NGramAnalysisInfo;
-import cs455.hadoop.analysis.type.WordDecadeKey;
 import cs455.hadoop.util.Constants;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -13,7 +12,7 @@ import java.io.IOException;
  * Author: Thilina
  * Date: 4/22/14
  */
-public class NGramAnalysisMapper extends Mapper<LongWritable, Text, WordDecadeKey, NGramAnalysisInfo> {
+public class NGramAnalysisMapper extends Mapper<LongWritable, Text, Text, NGramAnalysisInfo> {
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
@@ -27,13 +26,12 @@ public class NGramAnalysisMapper extends Mapper<LongWritable, Text, WordDecadeKe
         String[] keySegments = keyValueSegments[0].split(Constants.DELIMITER);
         int publishedYear = Integer.parseInt(keySegments[0]);
         String nGramString = keySegments[1];
-        WordDecadeKey wordDecadeKey = new WordDecadeKey(nGramString, publishedYear);
 
         // now we need to split the value String to get the metrics.
         String[] metricStrings = keyValueSegments[1].split(Constants.DELIMITER);
         NGramAnalysisInfo nGramAnalysisInfo = new NGramAnalysisInfo(publishedYear, Double.parseDouble(metricStrings[0]),
-                Double.parseDouble(metricStrings[0]),
-                Double.parseDouble(metricStrings[0]));
-        context.write(wordDecadeKey, nGramAnalysisInfo);
+                Double.parseDouble(metricStrings[1]),
+                Double.parseDouble(metricStrings[2]));
+        context.write(new Text(nGramString), nGramAnalysisInfo);
     }
 }

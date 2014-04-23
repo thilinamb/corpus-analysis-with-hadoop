@@ -1,11 +1,8 @@
 package cs455.hadoop.analysis.job;
 
 import cs455.hadoop.analysis.map.NGramAnalysisMapper;
-import cs455.hadoop.analysis.reduce.DiscontinuedWordsProcessingReducer;
+import cs455.hadoop.analysis.reduce.ContinuedWordsProcessingReducer;
 import cs455.hadoop.analysis.type.NGramAnalysisInfo;
-import cs455.hadoop.analysis.type.NaturalKeyGroupingComparator;
-import cs455.hadoop.analysis.type.NaturalKeyPartitioner;
-import cs455.hadoop.analysis.type.WordDecadeKey;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -17,25 +14,26 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import java.io.IOException;
 
 /**
- * Author: Thilina
- * Date: 4/22/14
+ * This job is to identify the words which are being used throughout all the decades.
+ * User: thilinab
+ * Date: 4/23/14
+ * Time: 1:15 PM
  */
-public class DiscontinuedWordProcessingJob {
+public class ContinuedWordsProcessingJob {
+
     public static void main(String[] args) {
         try {
             Job job = Job.getInstance(new Configuration());
-            job.setJarByClass(DiscontinuedWordProcessingJob.class);
-            job.setJobName("Identifying the words that are discontinued in use.");
-            job.setPartitionerClass(NaturalKeyPartitioner.class);
-            job.setGroupingComparatorClass(NaturalKeyGroupingComparator.class);
+            job.setJarByClass(ContinuedWordsProcessingJob.class);
+            job.setJobName("Identifying the words that are continually used.");
 
             // set the input/output path
             FileInputFormat.addInputPath(job, new Path(args[0]));
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
             job.setMapperClass(NGramAnalysisMapper.class);
-            job.setReducerClass(DiscontinuedWordsProcessingReducer.class);
+            job.setReducerClass(ContinuedWordsProcessingReducer.class);
 
-            job.setMapOutputKeyClass(WordDecadeKey.class);
+            job.setMapOutputKeyClass(Text.class);
             job.setMapOutputValueClass(NGramAnalysisInfo.class);
 
             job.setOutputKeyClass(Text.class);

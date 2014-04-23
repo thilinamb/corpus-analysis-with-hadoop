@@ -10,7 +10,7 @@ import java.io.IOException;
  * Author: Thilina
  * Date: 4/22/14
  */
-public class NGramAnalysisInfo implements Writable {
+public class NGramAnalysisInfo implements Writable, Comparable<NGramAnalysisInfo> {
 
     private int period;
     private double tfValue;
@@ -74,5 +74,10 @@ public class NGramAnalysisInfo implements Writable {
 
     public void setPeriod(int period) {
         this.period = period;
+    }
+
+    @Override
+    public int compareTo(NGramAnalysisInfo o) {
+        return new Integer(period).compareTo(o.getPeriod());
     }
 }
