@@ -19,7 +19,7 @@ public class GetDecadesFromFileNames {
         }
 
         String dirName = args[0];
-        boolean century = "century".equals(args[2].toLowerCase()) ? false : true;
+        boolean century = "century".equals(args[2].toLowerCase()) ? true : false;
         File directory = new File(dirName);
 
         if (!directory.isDirectory()) {
@@ -38,7 +38,7 @@ public class GetDecadesFromFileNames {
 
         for (String file : files) {
             int publishedYear = getPublishedYearFromFileName(file);
-            if (century) {
+            if (!century) {
                 publishedYear = publishedYear - (publishedYear % 10);
             } else {
                 publishedYear = publishedYear - (publishedYear % 100);
