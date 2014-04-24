@@ -27,11 +27,13 @@ public class BookMetricMapper extends Mapper<LongWritable, Text, Text, BookMetri
         StringTokenizer tok = new StringTokenizer(line);
         int wordCount = tok.countTokens();
 
-        // get the number of  sentences. I'm assuming that the number of 'period' signs
+        // get the number of  sentences. I'm assuming that the number of '.', '!' and '?'
         // is equal to number of sentences, i.e. 'period' signs are used only to separate
         // sentences.
 
         int sentenceCount = line.length() - line.replaceAll(".", "").length();
+        sentenceCount += line.length() - line.replaceAll("!", "").length();
+        sentenceCount += line.length() - line.replaceAll("\\?", "").length();
 
         // get the syllable count using the code snippet provided in the cs455 Wiki.
         int syllableCount = 0;
