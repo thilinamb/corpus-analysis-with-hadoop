@@ -18,18 +18,15 @@ public class TFMapper extends Mapper<LongWritable, Text, Text, TFNGramInfo> {
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         // split the line to separate the key and value pair.
         // currently it's of the form
-        // 001-Year1263.txt#word1 word2 4
+        // 001-Year1263.txt word1 word2 4
         String lineString = value.toString();
         String[] keyValSplit = lineString.split("\t");
 
-        // Split the key. It's of the form 068-Year458BC.txt#word1 word2
-        String[] keyStrSplits = keyValSplit[0].split("#");
-
-        String fileName = keyStrSplits[0];
-        String nGramString = keyStrSplits[1];
+        String fileName = keyValSplit[0];
+        String nGramString = keyValSplit[1];
         // now create the intermediate output of the form
         // doc_id -> {nGram string, count}
         context.write(new Text(fileName), new TFNGramInfo(new Text(nGramString),
-                new IntWritable(Integer.parseInt(keyValSplit[1].trim()))));
+                new IntWritable(Integer.parseInt(keyValSplit[2].trim()))));
     }
 }

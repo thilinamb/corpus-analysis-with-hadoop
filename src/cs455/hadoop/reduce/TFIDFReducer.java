@@ -36,9 +36,9 @@ public class TFIDFReducer extends Reducer<Text, TFIDFNGramInfo, Text, Text> {
         for (TFIDFNGramInfo TFIDFNGramInfo : cache) {
             double idfVal = Math.log10((double)corpusSize / (double)docFreq);
             double tfIdfVal = idfVal * TFIDFNGramInfo.getTfValue().get();
-            String newKeyString = TFIDFNGramInfo.getDocumentId().toString() + "#" + key.toString();
+            String newKeyString = TFIDFNGramInfo.getDocumentId().toString() + "\t" + key.toString();
             // value String is of the following form - tf#idf#tf-idf
-            String valueString = TFIDFNGramInfo.getTfValue().get() + "#" + idfVal + "#" + tfIdfVal;
+            String valueString = TFIDFNGramInfo.getTfValue().get() + "\t" + idfVal + "\t" + tfIdfVal;
             context.write(new Text(newKeyString), new Text(valueString));
         }
     }

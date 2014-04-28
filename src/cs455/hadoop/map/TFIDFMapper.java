@@ -18,15 +18,12 @@ public class TFIDFMapper extends Mapper<LongWritable, Text, Text, TFIDFNGramInfo
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String valueString = value.toString();
         // Each line of the input is of the following form
-        // doc_id#ngram_str ngram_count#tf_val
+        // doc_id   ngram_str   ngram_count tf_val
         String[] valueStrSegments = valueString.split("\t");
-        String keyString = valueStrSegments[0];
-        // split the key
-        String[] keyStringSegments = keyString.split("#");
-        String docId = keyStringSegments[0];
-        String nGramString = keyStringSegments[1];
+        String docId = valueStrSegments[0];
+        String nGramString = valueStrSegments[1];
         // split the value and get the TF value.
-        double tfVal = Double.parseDouble(valueStrSegments[1].split("#")[1]);
+        double tfVal = Double.parseDouble(valueStrSegments[3]);
         TFIDFNGramInfo TFIDFNGramInfo = new TFIDFNGramInfo(new Text(docId), new DoubleWritable(tfVal));
         context.write(new Text(nGramString), TFIDFNGramInfo);
     }

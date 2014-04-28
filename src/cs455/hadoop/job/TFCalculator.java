@@ -4,6 +4,8 @@ import cs455.hadoop.map.TFMapper;
 import cs455.hadoop.reduce.TFReducer;
 import cs455.hadoop.type.TFNGramInfo;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -20,11 +22,21 @@ public class TFCalculator {
 
     public static void main(String[] args) {
         try {
-            Job job = Job.getInstance(new Configuration());
+            Configuration conf = new Configuration();
+            Job job = Job.getInstance(conf);
             job.setJarByClass(TFCalculator.class);
             job.setJobName("TF Calculation.");
+
             // set the input path
-            FileInputFormat.addInputPath(job, new Path(args[0]));
+            // we need to process multiple input paths for task 5 to
+            // process input paths corresponding to different N-grams.
+            FileSystem fs = FileSystem.get(conf);
+            FileStatus[] status_list = fs.listStatus(new Path(args[0]));
+            if (status_list != null) {
+                for (FileStatus status : status_list) {
+                    FileInputFormat.addInputPath(job, status.getPath());
+                }
+            }
             // set the output path
             FileOutputFormat.setOutputPath(job, new Path(args[1]));
             job.setMapperClass(TFMapper.class);

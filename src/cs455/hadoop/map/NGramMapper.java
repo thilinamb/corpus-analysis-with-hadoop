@@ -52,8 +52,8 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
                 stringBuilder.append(" ");
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            // use '#' sign to separate the file name/decade and the N-gram
-            // For example, the key will be of the form 068-Year458BC.txt#word1 word2..
+            // use '\t' sign to separate the file name/decade and the N-gram
+            // For example, the key will be of the form 068-Year458BC.txt   word1 word2..
             String nGramKey;
             // if the key is the
             if (perDecade) {
@@ -61,7 +61,7 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
             } else {
                 nGramKey = fileName;
             }
-            nGramKey = nGramKey + "#" + stringBuilder.toString();
+            nGramKey = nGramKey + "\t" + stringBuilder.toString();
             context.write(new Text(nGramKey), new IntWritable(1));
         }
     }

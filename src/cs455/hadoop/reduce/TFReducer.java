@@ -33,10 +33,10 @@ public class TFReducer extends Reducer<Text, TFNGramInfo, Text, Text> {
         for (TFNGramInfo nGramInfo : cache) {
             int nGramCount = nGramInfo.getnGramCount().get();
             double tfValue = 0.5 + ((0.5 * nGramCount) / maxFrequency);
-            String newKey = key + "#" + nGramInfo.getnGramString();
-            String valString = nGramCount + "#" + tfValue;
+            String newKey = key + "\t" + nGramInfo.getnGramString();
+            String valString = nGramCount + "\t" + tfValue;
             // final output will of the form
-            // doc_id#ngram_str -> ngram_count#tf_val
+            // {doc_id   ngram_str}   {ngram_count tf_val}
             context.write(new Text(newKey), new Text(valString));
         }
 
