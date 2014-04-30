@@ -7,6 +7,8 @@ package cs455.hadoop.util;
 public class Constants {
     public static final String DELIMITER = "#";
 
+    public static final String RECURSIVE = "recursive";
+
     public static final String NGRAM_SIZE = "ngram-size";
 
     public static final String NGRAM_GRANUALITY = "ngram-granuality";
@@ -23,4 +25,5 @@ public class Constants {
     public static final String PER_BOOK = "book";
     public static final String PER_YEAR = "year";
     public static final String PER_DECADE = "decade";
+    public static final String PER_CENTURY = "century";
 }

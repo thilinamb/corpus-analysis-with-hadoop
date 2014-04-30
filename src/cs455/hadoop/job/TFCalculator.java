@@ -3,6 +3,7 @@ package cs455.hadoop.job;
 import cs455.hadoop.map.TFMapper;
 import cs455.hadoop.reduce.TFReducer;
 import cs455.hadoop.type.TFNGramInfo;
+import cs455.hadoop.util.Constants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -30,12 +31,16 @@ public class TFCalculator {
             // set the input path
             // we need to process multiple input paths for task 5 to
             // process input paths corresponding to different N-grams.
-            FileSystem fs = FileSystem.get(conf);
-            FileStatus[] status_list = fs.listStatus(new Path(args[0]));
-            if (status_list != null) {
-                for (FileStatus status : status_list) {
-                    FileInputFormat.addInputPath(job, status.getPath());
+            if (args.length > 2 && args[2].toLowerCase().equals(Constants.RECURSIVE)) {
+                FileSystem fs = FileSystem.get(conf);
+                FileStatus[] status_list = fs.listStatus(new Path(args[0]));
+                if (status_list != null) {
+                    for (FileStatus status : status_list) {
+                        FileInputFormat.addInputPath(job, status.getPath());
+                    }
                 }
+            } else {    // this is required in all the other cases. Just use the input directory.
+                FileInputFormat.addInputPath(job, new Path(args[0]));
             }
             // set the output path
             FileOutputFormat.setOutputPath(job, new Path(args[1]));

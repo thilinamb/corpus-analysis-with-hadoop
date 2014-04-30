@@ -22,4 +22,8 @@ public class Util {
     public static int getDecadeFromYear(int publishedYear) {
         return publishedYear - (publishedYear % 10);
     }
+
+    public static int getCenturyFromYear(int publishedYear) {
+        return publishedYear - (publishedYear % 100);
+    }
 }

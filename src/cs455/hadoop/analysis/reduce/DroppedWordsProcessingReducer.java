@@ -7,7 +7,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+    import java.util.Collections;
 import java.util.List;
 
 /**

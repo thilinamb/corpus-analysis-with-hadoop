@@ -42,7 +42,7 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         int nGramSize = Integer.parseInt(param);
 
         // Check whether the N-Grams are calculated per decade or per-book
-        boolean perDecade = Constants.NGRAM_PER_DECADE.equals(conf.get(Constants.NGRAM_GRANUALITY))? true : false;
+        String granularity = conf.get(Constants.NGRAM_GRANUALITY).toLowerCase();
 
         for (int j = 0; j <= (tokenCount - nGramSize); j++) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -56,8 +56,10 @@ public class NGramMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
             // For example, the key will be of the form 068-Year458BC.txt   word1 word2..
             String nGramKey;
             // if the key is the
-            if (perDecade) {
+            if (granularity.equals(Constants.PER_DECADE)) {
                 nGramKey = Integer.toString(Util.getDecadeFromYear(Util.getPublishedYearFromFileName(fileName)));
+            } else if (granularity.equals(Constants.PER_CENTURY)) {
+                nGramKey = Integer.toString(Util.getCenturyFromYear(Util.getPublishedYearFromFileName(fileName)));
             } else {
                 nGramKey = fileName;
             }
