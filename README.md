@@ -8,7 +8,7 @@ Task Description : [http://www.cs.colostate.edu/~cs455/CS455-Spring14-HW3-PC.pdf
 How to compile the source
 =========================
 - An Ant based build is supported. Run ant inside the root directory. The resulting jar will be inside the impl/dist directory.
-  The path for Hadoop installation should be provided when running Ant.  
+  The path for Hadoop(v2.3 or higher) installation should be provided when running Ant.  
   ```ant -Dlib.dir=/path/to/hadoop```
 
 ## How to run data analysis tasks
